@@ -1,0 +1,42 @@
+# ============================================================
+# docker-compose.yml  -- di ROOT project (news-rag-project/)
+# ============================================================
+# Orkestrasi 2 service: backend (FastAPI) + frontend (Streamlit).
+#   Jalanin semua:  docker compose up --build
+#   Matiin:         docker compose down
+# API key dibaca dari file .env di sebelah file ini, mis: GROQ_API_KEY=...
+# ============================================================
+
+services:
+  # --------------------------------------------------------
+  # BACKEND - FastAPI: muat model + jalanin pipeline RAG.
+  # --------------------------------------------------------
+  backend:
+    build: ./backend            # build dari backend/Dockerfile
+    ports:
+      - "8000:8000"             # host:container -> akses di http://localhost:8000
+    environment:
+      # API key di-passthrough dari .env host ke dalam container.
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}   # :- artinya boleh kosong (opsional)
+      # Path di-override ke lokasi volume di dalam container (lihat volumes).
+      - CHROMA_DIR=/data/chroma_db
+      - CLASSIFIER_PATH=/data/models/indobert_classifier
+    volumes:
+      # chroma_db HARUS read-write: ChromaDB perlu nulis lock/WAL saat konek.
+      - ./chroma_db:/data/chroma_db
+      # models cukup read-only (:ro): model cuma dibaca, gak diubah.
+      - ./models:/data/models:ro
+
+  # --------------------------------------------------------
+  # FRONTEND - Streamlit: tampilan, manggil backend via HTTP.
+  # --------------------------------------------------------
+  frontend:
+    build: ./frontend           # build dari frontend/Dockerfile
+    ports:
+      - "8501:8501"             # akses UI di http://localhost:8501
+    environment:
+      # Tunjuk ke service backend lewat nama (DNS internal Docker), bukan localhost.
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend                 # frontend baru start setelah backend dibuat
