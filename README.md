@@ -267,3 +267,19 @@ split makes the same pipeline runnable both locally and as a public Hugging Face
 - **Backend:** FastAPI + Uvicorn
 - **Frontend:** Streamlit
 - **Deploy:** Docker + docker-compose (local) / single-container Docker Space (HF)
+
+## ⚠️ Repository Folder Notes
+
+The `models/` and `chromadb/` folders are intentionally kept empty in this GitHub
+repository. Their generated contents are too large to upload through the GitHub
+web interface because some files are **larger than 25 MB**. Only the folder
+structure is kept in the repository.
+
+When the notebooks / pipeline are run locally, these folders will be generated
+again automatically:
+
+- `models/` will contain the fine-tuned IndoBERT category and sentiment models.
+- `chromadb/` will contain the generated ChromaDB vector database.
+
+Therefore, a fresh clone may show these folders as empty at first, but they will
+be populated after running the corresponding notebooks / pipeline steps.
