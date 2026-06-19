@@ -10,6 +10,11 @@ in a **grounded** way (only from retrieved context, anti-hallucination).
 👉 **Live demo:** [News Intelligence Assistant on Hugging Face Spaces](https://huggingface.co/spaces/Kamigon/news-rag-apps)
 👉 The full pipeline - **scraping, preprocessing, model fine-tuning, retrieval, and the FE/BE/Docker app** - is my own work.
 
+> ⚠️ **Note on empty folders:** the `models/` and `chroma_db/` folders are kept
+> empty in this GitHub repo on purpose - their generated contents exceed GitHub's
+> 25 MB web-upload limit. They are regenerated automatically when the notebooks /
+> pipeline are run (see [Repository Folder Notes](#-repository-folder-notes)).
+
 ---
 
 ## ✨ Features
@@ -21,8 +26,8 @@ in a **grounded** way (only from retrieved context, anti-hallucination).
   - **RAG** (ChromaDB + embedding + LLM) - retrieves and answers, grounded
 - **Metadata-aware retrieval:** vector search is filtered by predicted category and
   optional sentiment, then deduplicated per article.
-- **Grounded generation:** the LLM may only answer from retrieved context; out-of
-  -coverage questions get an honest "not found" (anti-hallucination).
+- **Grounded generation:** the LLM may only answer from retrieved context;
+  out-of-coverage questions get an honest "not found" (anti-hallucination).
 - **Clean BE/FE split:** the same pipeline runs locally (docker-compose, 2 containers)
   and as a public single-container Hugging Face Space.
 
@@ -169,6 +174,23 @@ docker compose down           # stop
 
 ---
 
+## 🗃️ Repository Folder Notes
+
+The `models/` and `chroma_db/` folders are intentionally kept **empty** in this
+GitHub repository - only the folder structure is committed. Their generated contents
+are too large for GitHub's web interface (some files are **larger than 25 MB**).
+
+When the notebooks / pipeline are run locally, these folders are regenerated
+automatically:
+
+- `models/` -> the fine-tuned IndoBERT category and sentiment models.
+- `chroma_db/` -> the generated ChromaDB vector database.
+
+So a fresh clone may show these folders as empty at first; they get populated after
+running the corresponding notebooks / pipeline steps.
+
+---
+
 ## 🚀 Deployment to Hugging Face Spaces
 
 Live: **https://huggingface.co/spaces/Kamigon/news-rag-apps**
@@ -267,6 +289,8 @@ split makes the same pipeline runnable both locally and as a public Hugging Face
 - **Backend:** FastAPI + Uvicorn
 - **Frontend:** Streamlit
 - **Deploy:** Docker + docker-compose (local) / single-container Docker Space (HF)
+
+---
 
 ## ⚠️ Repository Folder Notes
 
