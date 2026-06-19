@@ -1,0 +1,8 @@
+# ============================================================
+# Dependensi FRONTEND (Streamlit) - RINGAN, tanpa model/torch
+# ============================================================
+# Frontend cuma manggil backend lewat HTTP, jadi gak butuh transformers,
+# torch, chromadb, dll. Image Docker FE jadi kecil.
+
+streamlit>=1.32.0
+requests>=2.31.0
